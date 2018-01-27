@@ -13,17 +13,24 @@ namespace CommonLibrary
         {
             time = "Fail";
             Ping ping = new Ping();
-            PingReply pingReply = ping.Send(address);
-            if (pingReply.Status == IPStatus.Success)
+            try
             {
-                time = pingReply.RoundtripTime.ToString();
-                return true;
+                PingReply pingReply = ping.Send(address);
+                if (pingReply.Status == IPStatus.Success)
+                {
+                    time = pingReply.RoundtripTime.ToString();
+                    return true;
+                }
+                if (pingReply.Status == IPStatus.TimedOut)
+                {
+                    time = "TimeOut";
+                    return false;
+                }
             }
-            if (pingReply.Status == IPStatus.TimedOut)
+            catch (Exception e)
             {
-                time = "TimeOut";
-                return false;
             }
+            
             return false;
         }
 

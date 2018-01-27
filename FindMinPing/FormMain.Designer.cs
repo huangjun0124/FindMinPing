@@ -42,6 +42,7 @@
             this.btnPingSelected = new System.Windows.Forms.Button();
             this.btnExportJson = new System.Windows.Forms.Button();
             this.btnHideTimeout = new System.Windows.Forms.Button();
+            this.btnShowTextBox = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
@@ -73,6 +74,7 @@
             this.txtAddress.Name = "txtAddress";
             this.txtAddress.Size = new System.Drawing.Size(394, 25);
             this.txtAddress.TabIndex = 0;
+            this.txtAddress.DoubleClick += new System.EventHandler(this.txt_DoubleClick);
             // 
             // txtMail
             // 
@@ -80,6 +82,7 @@
             this.txtMail.Name = "txtMail";
             this.txtMail.Size = new System.Drawing.Size(210, 25);
             this.txtMail.TabIndex = 1;
+            this.txtMail.DoubleClick += new System.EventHandler(this.txt_DoubleClick);
             // 
             // panel1
             // 
@@ -96,6 +99,7 @@
             // 
             this.dgvResult.AllowUserToAddRows = false;
             this.dgvResult.AllowUserToDeleteRows = false;
+            this.dgvResult.AllowUserToOrderColumns = true;
             this.dgvResult.AllowUserToResizeRows = false;
             this.dgvResult.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -116,6 +120,7 @@
             this.dgvResult.Size = new System.Drawing.Size(462, 433);
             this.dgvResult.TabIndex = 4;
             this.dgvResult.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellDoubleClick);
+            this.dgvResult.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvResult_ColumnHeaderMouseClick);
             this.dgvResult.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dgvResult_SortCompare);
             // 
             // txtList
@@ -130,6 +135,7 @@
             // 
             // flowLayoutPanel1
             // 
+            this.flowLayoutPanel1.Controls.Add(this.btnShowTextBox);
             this.flowLayoutPanel1.Controls.Add(this.btnResolve);
             this.flowLayoutPanel1.Controls.Add(this.btnPingAll);
             this.flowLayoutPanel1.Controls.Add(this.btnPingSelected);
@@ -144,7 +150,7 @@
             // btnResolve
             // 
             this.btnResolve.AutoSize = true;
-            this.btnResolve.Location = new System.Drawing.Point(3, 3);
+            this.btnResolve.Location = new System.Drawing.Point(3, 46);
             this.btnResolve.Name = "btnResolve";
             this.btnResolve.Size = new System.Drawing.Size(126, 37);
             this.btnResolve.TabIndex = 3;
@@ -155,7 +161,7 @@
             // btnPingAll
             // 
             this.btnPingAll.AutoSize = true;
-            this.btnPingAll.Location = new System.Drawing.Point(3, 46);
+            this.btnPingAll.Location = new System.Drawing.Point(3, 89);
             this.btnPingAll.Name = "btnPingAll";
             this.btnPingAll.Size = new System.Drawing.Size(126, 37);
             this.btnPingAll.TabIndex = 3;
@@ -166,7 +172,7 @@
             // btnPingSelected
             // 
             this.btnPingSelected.AutoSize = true;
-            this.btnPingSelected.Location = new System.Drawing.Point(3, 89);
+            this.btnPingSelected.Location = new System.Drawing.Point(3, 132);
             this.btnPingSelected.Name = "btnPingSelected";
             this.btnPingSelected.Size = new System.Drawing.Size(126, 37);
             this.btnPingSelected.TabIndex = 3;
@@ -177,7 +183,7 @@
             // btnExportJson
             // 
             this.btnExportJson.AutoSize = true;
-            this.btnExportJson.Location = new System.Drawing.Point(3, 132);
+            this.btnExportJson.Location = new System.Drawing.Point(3, 175);
             this.btnExportJson.Name = "btnExportJson";
             this.btnExportJson.Size = new System.Drawing.Size(126, 37);
             this.btnExportJson.TabIndex = 3;
@@ -188,13 +194,24 @@
             // btnHideTimeout
             // 
             this.btnHideTimeout.AutoSize = true;
-            this.btnHideTimeout.Location = new System.Drawing.Point(3, 175);
+            this.btnHideTimeout.Location = new System.Drawing.Point(3, 218);
             this.btnHideTimeout.Name = "btnHideTimeout";
             this.btnHideTimeout.Size = new System.Drawing.Size(126, 37);
             this.btnHideTimeout.TabIndex = 3;
             this.btnHideTimeout.Text = "隐藏TimeOut";
             this.btnHideTimeout.UseVisualStyleBackColor = true;
             this.btnHideTimeout.Click += new System.EventHandler(this.btnHideTimeout_Click);
+            // 
+            // btnShowTextBox
+            // 
+            this.btnShowTextBox.AutoSize = true;
+            this.btnShowTextBox.Location = new System.Drawing.Point(3, 3);
+            this.btnShowTextBox.Name = "btnShowTextBox";
+            this.btnShowTextBox.Size = new System.Drawing.Size(126, 37);
+            this.btnShowTextBox.TabIndex = 3;
+            this.btnShowTextBox.Text = "显示文本框";
+            this.btnShowTextBox.UseVisualStyleBackColor = true;
+            this.btnShowTextBox.Click += new System.EventHandler(this.btnShowTextBox_Click);
             // 
             // FormMain
             // 
@@ -230,6 +247,7 @@
         private System.Windows.Forms.Button btnPingAll;
         private System.Windows.Forms.Button btnExportJson;
         private System.Windows.Forms.Button btnHideTimeout;
+        private System.Windows.Forms.Button btnShowTextBox;
     }
 }
 

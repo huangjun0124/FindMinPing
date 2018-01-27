@@ -22,10 +22,15 @@ namespace FindMinPing
             InitializeComponent();
             txtAddress.Text = "https://free-ss.site/";
             this.txtMail.Text = "ss@rohankdd.com";
+            ShowControlInPanel(this.txtList);
+        }
+
+        private void ShowControlInPanel(Control control)
+        {
             this.panel1.Controls.Clear();
-            this.txtList.Dock = DockStyle.Fill;
-            this.panel1.Controls.Add(txtList);
-            this.txtList.Select();
+            control.Dock = DockStyle.Fill;
+            this.panel1.Controls.Add(control);
+            control.Select();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -65,7 +70,7 @@ namespace FindMinPing
             if (string.IsNullOrEmpty(txtList.Text)) return;
             DataTable dt = new DataTable();
             var lines = txtList.Text.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
-            dt.Columns.Add("HeartStar");
+            dt.Columns.Add("HeartStar", typeof(int));
             dt.Columns.Add("IP");
             dt.Columns.Add("Port");
             dt.Columns.Add("Password");
@@ -88,19 +93,13 @@ namespace FindMinPing
                 }
                 dt.Rows.Add(row);
             }
+
             dt.Columns.Add("PingResult");
-            dt.Columns.Add("Min");
-            dt.Columns.Add("Max");
-            dt.Columns.Add("Avg");
-            this.dgvResult.DataSource = dt;
-            this.dgvResult.Dock = DockStyle.Fill;
-            this.panel1.Controls.Clear();
-            this.panel1.Controls.Add(dgvResult);
-            int displayIndex = 0;
-            dgvResult.Columns["PingResult"].DisplayIndex = displayIndex++;
-            dgvResult.Columns["Min"].DisplayIndex = displayIndex++;
-            dgvResult.Columns["Max"].DisplayIndex = displayIndex++;
-            dgvResult.Columns["Avg"].DisplayIndex = displayIndex++;
+            dt.Columns.Add("Min", typeof(int));
+            dt.Columns.Add("Max",typeof(int));
+            dt.Columns.Add("Avg", typeof(int));
+            ShowControlInPanel(this.dgvResult);
+            DataGridBind(dt);
         }
 
         private void btnPingSelected_Click(object sender, EventArgs e)
@@ -277,6 +276,7 @@ namespace FindMinPing
 
         #endregion
 
+        //The SortCompare event does not occur when the DataSource property is set or when the VirtualMode property value is true...........
         private void dgvResult_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
         {
             HashSet<string> colNames = new HashSet<string>();
@@ -292,5 +292,68 @@ namespace FindMinPing
             }
             e.Handled = false;
         }
+
+        private void txt_DoubleClick(object sender, EventArgs e)
+        {
+            TextBox obj = sender as TextBox;
+            try
+            {
+                Clipboard.SetText(obj.Text);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("剪切板操作失败");
+            }
+        }
+
+        private void btnShowTextBox_Click(object sender, EventArgs e)
+        {
+            ShowControlInPanel(this.txtList);
+        }
+
+        private void DataGridBind(DataTable dt)
+        {
+            this.dgvResult.DataSource = dt;
+
+            int displayIndex = 0;
+            dgvResult.Columns["PingResult"].DisplayIndex = displayIndex++;
+            dgvResult.Columns["Min"].DisplayIndex = displayIndex++;
+            dgvResult.Columns["Max"].DisplayIndex = displayIndex++;
+            dgvResult.Columns["Avg"].DisplayIndex = displayIndex++;
+
+            //dgvResult.Columns["HeartStar"].SortMode = DataGridViewColumnSortMode.Programmatic;
+            //dgvResult.Columns["Min"].SortMode = DataGridViewColumnSortMode.Programmatic;
+            //dgvResult.Columns["Max"].SortMode = DataGridViewColumnSortMode.Programmatic;
+            //dgvResult.Columns["Avg"].SortMode = DataGridViewColumnSortMode.Programmatic;
+        }
+
+        #region Code Commented
+        private void dgvResult_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            return;
+            if (e.ColumnIndex <= 0) return;
+            //取得点击列的索引
+            int nColumnIndex = e.ColumnIndex;
+            if (dgvResult.Columns[nColumnIndex].SortMode != DataGridViewColumnSortMode.Programmatic)
+            {
+                return;
+            }
+            switch (dgvResult.Columns[nColumnIndex].HeaderCell.SortGlyphDirection)
+            {
+                case SortOrder.None:
+                case SortOrder.Ascending:
+                    //在这里加入排序的逻辑
+                    DataView view = new DataView(this.dgvResult.DataSource as DataTable);
+                    view.Sort = dgvResult.Columns[nColumnIndex].Name + " ASC";
+
+                    //设置列标题的状体 
+                    dgvResult.Columns[nColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+                    break;
+                default:
+                    dgvResult.Columns[nColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+                    break;
+            }
+        }
+        #endregion
     }
 }
