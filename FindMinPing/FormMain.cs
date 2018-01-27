@@ -11,6 +11,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonLibrary;
 
 namespace FindMinPing
 {
@@ -108,35 +109,6 @@ namespace FindMinPing
             PingSelectedRows(dgvResult.SelectedRows);
         }
 
-        private void AnalyzePingResult(IList<string> results, out int min, out int max, out int avg)
-        {
-            min = int.MaxValue;
-            max = avg = 0;
-            int avgCnt = 0;
-            foreach (string result in results)
-            {
-                if (result != "Fail" && result != "TimeOut")
-                {
-                    var tmp = int.Parse(result);
-                    avgCnt++;
-                    avg += tmp;
-                    if (tmp > max)
-                    {
-                        max = tmp;
-                    }
-                    if (tmp < min)
-                    {
-                        min = tmp;
-                    }
-                }
-            }
-
-            if (avgCnt > 0)
-            {
-                avg /= avgCnt;
-            }
-        }
-
         private ConcurrentQueue<WorkerParam> _workerParams;
         private void btnPingAll_Click(object sender, EventArgs e)
         {
@@ -180,7 +152,7 @@ namespace FindMinPing
 
         private void UpdateRow(WorkerResult result)
         {
-            AnalyzePingResult(result.Times, out var min, out var max, out var avg);
+            PingUtil.AnalyzePingResult(result.Times, out var min, out var max, out var avg);
             var row = dgvResult.Rows[result.RowIndex];
             row.Cells["PingResult"].Value = string.Join(";", result.Times);
             row.Cells["Min"].Value = min;

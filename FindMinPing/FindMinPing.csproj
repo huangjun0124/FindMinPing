@@ -58,7 +58,6 @@
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
     <Compile Include="JsonManipulator.cs" />
-    <Compile Include="PingUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SS_GUI_Config.cs" />
@@ -90,6 +89,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="www.ico.la_b9bbfa5f6a29a666ed306a2e333971fa_128X128.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj">
+      <Project>{C01B2580-A4AD-404D-B63C-28E90DCE8342}</Project>
+      <Name>CommonLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
