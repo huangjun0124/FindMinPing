@@ -41,6 +41,7 @@
             this.btnPingAll = new System.Windows.Forms.Button();
             this.btnPingSelected = new System.Windows.Forms.Button();
             this.btnExportJson = new System.Windows.Forms.Button();
+            this.btnHideTimeout = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
@@ -77,7 +78,7 @@
             // 
             this.txtMail.Location = new System.Drawing.Point(403, 3);
             this.txtMail.Name = "txtMail";
-            this.txtMail.Size = new System.Drawing.Size(272, 25);
+            this.txtMail.Size = new System.Drawing.Size(210, 25);
             this.txtMail.TabIndex = 1;
             // 
             // panel1
@@ -115,6 +116,7 @@
             this.dgvResult.Size = new System.Drawing.Size(462, 433);
             this.dgvResult.TabIndex = 4;
             this.dgvResult.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellDoubleClick);
+            this.dgvResult.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dgvResult_SortCompare);
             // 
             // txtList
             // 
@@ -123,6 +125,7 @@
             this.txtList.Size = new System.Drawing.Size(527, 445);
             this.txtList.TabIndex = 3;
             this.txtList.Text = "";
+            this.txtList.TextChanged += new System.EventHandler(this.txtList_TextChanged);
             this.txtList.DoubleClick += new System.EventHandler(this.txtList_DoubleClick);
             // 
             // flowLayoutPanel1
@@ -131,6 +134,7 @@
             this.flowLayoutPanel1.Controls.Add(this.btnPingAll);
             this.flowLayoutPanel1.Controls.Add(this.btnPingSelected);
             this.flowLayoutPanel1.Controls.Add(this.btnExportJson);
+            this.flowLayoutPanel1.Controls.Add(this.btnHideTimeout);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(978, 34);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -181,6 +185,17 @@
             this.btnExportJson.UseVisualStyleBackColor = true;
             this.btnExportJson.Click += new System.EventHandler(this.btnExportJson_Click);
             // 
+            // btnHideTimeout
+            // 
+            this.btnHideTimeout.AutoSize = true;
+            this.btnHideTimeout.Location = new System.Drawing.Point(3, 175);
+            this.btnHideTimeout.Name = "btnHideTimeout";
+            this.btnHideTimeout.Size = new System.Drawing.Size(126, 37);
+            this.btnHideTimeout.TabIndex = 3;
+            this.btnHideTimeout.Text = "隐藏TimeOut";
+            this.btnHideTimeout.UseVisualStyleBackColor = true;
+            this.btnHideTimeout.Click += new System.EventHandler(this.btnHideTimeout_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -214,6 +229,7 @@
         private System.Windows.Forms.Button btnPingSelected;
         private System.Windows.Forms.Button btnPingAll;
         private System.Windows.Forms.Button btnExportJson;
+        private System.Windows.Forms.Button btnHideTimeout;
     }
 }
 

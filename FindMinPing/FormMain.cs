@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,6 +24,7 @@ namespace FindMinPing
             this.panel1.Controls.Clear();
             this.txtList.Dock = DockStyle.Fill;
             this.panel1.Controls.Add(txtList);
+            this.txtList.Select();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -47,7 +49,14 @@ namespace FindMinPing
         private void txtList_DoubleClick(object sender, EventArgs e)
         {
             txtList.Text = Clipboard.GetText();
-            btnResolve.PerformClick();
+        }
+
+        private void txtList_TextChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtList.Text))
+            {
+                btnResolve.PerformClick();
+            }
         }
 
         private void btnResolve_Click(object sender, EventArgs e)
@@ -96,12 +105,7 @@ namespace FindMinPing
         private void btnPingSelected_Click(object sender, EventArgs e)
         {
             if (dgvResult.DataSource == null || dgvResult.SelectedRows.Count == 0) return;
-            this.Cursor = Cursors.WaitCursor;
-            string address = dgvResult.SelectedRows[0].Cells["IP"].Value.ToString();
-            IList<string> times = PingUtil.Ping(address);
-            AnalyzePingResult(times, out var min, out var max, out var avg);
-            MessageBox.Show($"{string.Join(",", times)}\nMin:{min}\nMax:{max}\nAvg:{avg}", "ping result :" + address);
-            this.Cursor = Cursors.Default;
+            PingSelectedRows(dgvResult.SelectedRows);
         }
 
         private void AnalyzePingResult(IList<string> results, out int min, out int max, out int avg)
@@ -136,13 +140,19 @@ namespace FindMinPing
         private ConcurrentQueue<WorkerParam> _workerParams;
         private void btnPingAll_Click(object sender, EventArgs e)
         {
-            if (dgvResult.DataSource == null || dgvResult.SelectedRows.Count == 0) return;
+            if (dgvResult.DataSource == null || dgvResult.RowCount == 0) return;
+            PingSelectedRows(dgvResult.Rows);
+        }
+
+        private void PingSelectedRows(IList rows)
+        {
             this.btnPingAll.Enabled = false;
+            this.btnPingSelected.Enabled = false;
             dgvResult.Select();
             _workerParams = new ConcurrentQueue<WorkerParam>();
-            foreach (DataGridViewRow row in dgvResult.Rows)
+            foreach (DataGridViewRow row in rows)
             {
-                _workerParams.Enqueue( new WorkerParam()
+                _workerParams.Enqueue(new WorkerParam()
                 {
                     Address = row.Cells["IP"].Value.ToString(),
                     RowIndex = row.Index
@@ -164,6 +174,7 @@ namespace FindMinPing
         {
             if (btnPingAll.Enabled) return;
             btnPingAll.Enabled = true;
+            btnPingSelected.Enabled = true;
             MessageBox.Show("Ping全部完成");
         }
 
@@ -218,13 +229,61 @@ namespace FindMinPing
 
         private void btnExportJson_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-
-
-            foreach (DataGridViewRow row in dgvResult.SelectedRows)
+            //if (dgvResult.SelectedRows.Count == 0) return;
+            OpenFileDialog dialog = new OpenFileDialog()
             {
+                InitialDirectory = @"Z:\SSR",
+                Filter = "Json文件|*.json",
+                RestoreDirectory = true,
+                FilterIndex = 1,
+                FileName = "gui-config.json"
+            };
 
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                JsonManipulator jManip = new JsonManipulator(dialog.FileName);
+                foreach (DataGridViewRow row in dgvResult.Rows)
+                {
+                    if (!row.Selected || !row.Visible) continue;
+                    SS_GUI_Config config = new SS_GUI_Config()
+                    {
+                        remarks = row.Cells["Location"].Value.ToString(),
+                        server = row.Cells["IP"].Value.ToString(),
+                        server_port = row.Cells["Port"].Value.ToString(),
+                        password = row.Cells["Password"].Value.ToString(),
+                        method = row.Cells["Method"].Value.ToString()
+                    };
+                    jManip.AddConfig(config);
+                }
+                string testFilePath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+                                      "\\gui_config.json";
+                jManip.WriteJsonToFile();
+                MessageBox.Show("已成功保存到文件：" + dialog.FileName, "保存成功");
             }
+        }
+
+        private void btnHideTimeout_Click(object sender, EventArgs e)
+        {
+            bool visible = true;
+            if (btnHideTimeout.Text == "隐藏TimeOut")
+            {
+                visible = false;
+                btnHideTimeout.Text = "显示所有";
+            }
+            else
+            {
+                btnHideTimeout.Text = "隐藏TimeOut";
+            }
+            CurrencyManager myCM = (CurrencyManager)BindingContext[dgvResult.DataSource];
+            myCM.SuspendBinding();//挂起数据绑定
+            foreach (DataGridViewRow row in dgvResult.Rows)
+            {
+                if (row.Cells["PingResult"].Value.ToString().Contains("TimeOut"))
+                {
+                    row.Visible = visible;
+                }
+            }
+            myCM.ResumeBinding();//恢复数据绑定
         }
 
         #region Inner Typedefs
@@ -245,5 +304,21 @@ namespace FindMinPing
         }
 
         #endregion
+
+        private void dgvResult_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            HashSet<string> colNames = new HashSet<string>();
+            colNames.Add("Min");
+            colNames.Add("Max");
+            colNames.Add("HeartStar");
+            colNames.Add("Agv");
+            if (colNames.Contains(e.Column.Name))
+            {
+                e.SortResult = Convert.ToInt16(e.CellValue1) - Convert.ToInt16(e.CellValue2);
+                e.Handled = true;
+                return;
+            }
+            e.Handled = false;
+        }
     }
 }

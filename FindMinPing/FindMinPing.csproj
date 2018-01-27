@@ -57,7 +57,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="JsonConverter.cs" />
+    <Compile Include="JsonManipulator.cs" />
     <Compile Include="PingUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
