@@ -216,9 +216,11 @@ namespace FindMinPing
                 foreach (DataGridViewRow row in dgvResult.Rows)
                 {
                     if (!row.Selected || !row.Visible) continue;
+                    var remark = row.Cells["Location"].Value.ToString();
                     SS_GUI_Config config = new SS_GUI_Config()
                     {
-                        remarks = row.Cells["Location"].Value.ToString(),
+                        remarks = remark,
+                        remarks_base64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(remark)),
                         server = row.Cells["IP"].Value.ToString(),
                         server_port = row.Cells["Port"].Value.ToString(),
                         password = row.Cells["Password"].Value.ToString(),
@@ -226,8 +228,6 @@ namespace FindMinPing
                     };
                     jManip.AddConfig(config);
                 }
-                string testFilePath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-                                      "\\gui_config.json";
                 jManip.WriteJsonToFile();
                 MessageBox.Show("已成功保存到文件：" + dialog.FileName, "保存成功");
             }

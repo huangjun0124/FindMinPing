@@ -19,7 +19,7 @@ namespace FindMinPing
         public string protocolparam => "";
         public string obfs => "plain";
         public string obfsparam => "";
-        public string remarks_base64 => "dnVsdHI";
+        public string remarks_base64 { get; set; }
         public string group => "";
         public bool enable => true;
         public bool udp_over_tcp => false;
