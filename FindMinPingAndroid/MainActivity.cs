@@ -29,6 +29,7 @@ namespace FindMinPingAndroid
                 clipboard.PrimaryClip = clip;
                 Toast.MakeText(this, "复制网址成功！", ToastLength.Long).Show();
             };
+            btnCopyAddress.PerformClick();
 
             Button btnPaste = FindViewById<Button>(Resource.Id.btnPaste);
             btnPaste.Click += delegate
@@ -81,17 +82,21 @@ namespace FindMinPingAndroid
             {
                 //this.RunOnUiThread(() =>
                 {
+                    var surpportedMethods = new string[] { "table","rc4","rc4-md5","rc4-md5-6",
+                        "aes-128-cfb","aes-192-cfb","aes-256-cfb","aes-128-ctr","aes-192-ctr",
+                        "aes-256-ctr","bf-cfb","camellia-128-cfb","camellia-192-cfb","camellia-256-cfb",
+                        "salsa20","chacha20","chacha20-ietf"};
                     IList<PingRetItem> list = new List<PingRetItem>();
                     var lines = text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                    int start = 0;
-                    for (int i = 0; i < Math.Min(lines.Length,30); i++)
+                    for (int i = 0; i < lines.Length; i++)
                     {
                         var rowCells = lines[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
                         if (!int.TryParse(rowCells[0], out var tmp))
                         {
-                            if (i == 0) continue;
+                            if (i == 0) continue; // start or end
                             else break;
                         }
+                        if (!surpportedMethods.Contains(rowCells[4])) continue;
                         IList<string> times = PingUtil.Ping(rowCells[1], 3);
                         PingUtil.AnalyzePingResult(times, out var min, out var max, out var avg);
                         list.Add(new PingRetItem()
@@ -103,12 +108,13 @@ namespace FindMinPingAndroid
                             Method = rowCells[4],
                             PingResult = string.Join(",", times)
                         });
+                        if (list.Count >= 25) break;
                     }
                     this.RunOnUiThread(() =>
                     {
                         Toast.MakeText(this, "Ping测试结束，请查看avg靠前的10个结果列表", ToastLength.Long).Show();
                         EditText tv = FindViewById<EditText>(Resource.Id.editText1);
-                        tv.Text = string.Join("\n", list.OrderBy(p => p.Avg).Take(10));
+                        tv.Text = string.Join("\n", list.OrderBy(p => p.Avg));
                     });
                 }; //);
 
