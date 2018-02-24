@@ -36,6 +36,11 @@ namespace FindMinPing
         private void FormMain_Load(object sender, EventArgs e)
         {
             this.Size = new Size(1060, 704);
+            try
+            {
+                Clipboard.SetText("txtAddress.Text");
+            }
+            catch (Exception) { }
         }
 
         private void dgvResult_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
