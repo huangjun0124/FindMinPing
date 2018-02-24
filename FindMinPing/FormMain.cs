@@ -38,7 +38,7 @@ namespace FindMinPing
             this.Size = new Size(1060, 704);
             try
             {
-                Clipboard.SetText("txtAddress.Text");
+                Clipboard.SetText(txtAddress.Text);
             }
             catch (Exception) { }
         }
