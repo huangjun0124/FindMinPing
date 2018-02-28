@@ -24,11 +24,17 @@ namespace FindMinPingAndroid
             Button btnCopyAddress = FindViewById<Button>(Resource.Id.btnCopyAddress);
             btnCopyAddress.Click += delegate
             {
+                var url = "https://free-ss.site/";
                 //for copy
                 var clipboard = (ClipboardManager)GetSystemService(ClipboardService);
-                var clip = ClipData.NewPlainText("SS", "https://free-ss.site/");
+                var clip = ClipData.NewPlainText("SS", url);
                 clipboard.PrimaryClip = clip;
                 Toast.MakeText(this, "复制网址成功！", ToastLength.Long).Show();
+
+                // Open link
+                var uri = Android.Net.Uri.Parse(url);
+                var intent = new Intent(Intent.ActionView, uri);
+                StartActivity(intent);
             };
             btnCopyAddress.PerformClick();
 

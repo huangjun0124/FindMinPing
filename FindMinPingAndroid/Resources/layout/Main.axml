@@ -7,7 +7,7 @@
     android:minHeight="25px"
     android:id="@+id/linearLayout1">
     <Button
-        android:text="复制网址"
+        android:text="打开网址"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnCopyAddress"
