@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Android.App;
 using Android.Content;
@@ -114,12 +115,23 @@ namespace FindMinPingAndroid
                     {
                         Toast.MakeText(this, "Ping测试结束，请查看avg靠前的10个结果列表", ToastLength.Long).Show();
                         EditText tv = FindViewById<EditText>(Resource.Id.editText1);
-                        tv.Text = string.Join("\n", list.OrderBy(p => p.Avg));
+                        tv.Text = string.Join("\n", list.OrderBy(p => p.Avg).Select(GetSSLinkForServer));
+                        //for copy
+                        var clipboard = (ClipboardManager)GetSystemService(ClipboardService);
+                        var clip = ClipData.NewPlainText("SS", tv.Text);
+                        clipboard.PrimaryClip = clip;
                     });
                 }; //);
 
             }).Start();
 
+        }
+
+        private string GetSSLinkForServer(PingRetItem item)
+        {
+            string parts = item.Method + ":" + item.Password + "@" + item.IP + ":" + item.Port;
+            string base64 = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(parts)).Replace("=", "");
+            return "ss://" + base64;
         }
 
         class PingRetItem
