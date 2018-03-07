@@ -17,10 +17,11 @@ namespace FindMinPing
 {
     public partial class FormMain : Form
     {
+        private string m_SiteUrl = "https://free-ss.site/";
         public FormMain()
         {
             InitializeComponent();
-            txtAddress.Text = "https://free-ss.site/";
+            txtAddress.Text = m_SiteUrl;
             this.txtMail.Text = "ss@rohankdd.com";
             ShowControlInPanel(this.txtList);
         }
@@ -300,6 +301,9 @@ namespace FindMinPing
 
         private void txt_DoubleClick(object sender, EventArgs e)
         {
+            //调用系统默认的浏览器   
+            System.Diagnostics.Process.Start(m_SiteUrl);
+            return;
             TextBox obj = sender as TextBox;
             try
             {
