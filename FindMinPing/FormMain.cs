@@ -76,21 +76,18 @@ namespace FindMinPing
             if (string.IsNullOrEmpty(txtList.Text)) return;
             DataTable dt = new DataTable();
             var lines = txtList.Text.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
-            dt.Columns.Add("HeartStar", typeof(int));
+            dt.Columns.Add("HeartStar");
             dt.Columns.Add("IP");
             dt.Columns.Add("Port");
             dt.Columns.Add("Password");
             dt.Columns.Add("Method");
             dt.Columns.Add("Time");
             dt.Columns.Add("Location");
-            int tmp;
+         
             for (int i = 1; i < lines.Length; i++)
             {
                 var rowCells = lines[i].Split(new string[] {"\t"}, StringSplitOptions.RemoveEmptyEntries);
-                if(!int.TryParse(rowCells[0], out tmp))
-                {
-                    break;
-                }
+                if (rowCells[0].Contains("VPS")) break;
                 DataRow row = dt.NewRow();
                 int colIndex = 0;
                 foreach (var cell in rowCells)

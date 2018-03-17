@@ -98,11 +98,7 @@ namespace FindMinPingAndroid
                     for (int i = 0; i < lines.Length; i++)
                     {
                         var rowCells = lines[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
-                        if (!int.TryParse(rowCells[0], out var tmp))
-                        {
-                            if (i == 0) continue; // start or end
-                            else break;
-                        }
+                        if (rowCells[0].Contains("VPS")) break;
                         if (!surpportedMethods.Contains(rowCells[4])) continue;
                         IList<string> times = PingUtil.Ping(rowCells[1], 3);
                         PingUtil.AnalyzePingResult(times, out var min, out var max, out var avg);
