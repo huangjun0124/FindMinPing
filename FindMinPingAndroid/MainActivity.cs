@@ -25,11 +25,11 @@ namespace FindMinPingAndroid
             btnCopyAddress.Click += delegate
             {
                 var url = "https://free-ss.site/";
-                //for copy
-                var clipboard = (ClipboardManager)GetSystemService(ClipboardService);
-                var clip = ClipData.NewPlainText("SS", url);
-                clipboard.PrimaryClip = clip;
-                Toast.MakeText(this, "复制网址成功！", ToastLength.Long).Show();
+                ////for copy
+                //var clipboard = (ClipboardManager)GetSystemService(ClipboardService);
+                //var clip = ClipData.NewPlainText("SS", url);
+                //clipboard.PrimaryClip = clip;
+                //Toast.MakeText(this, "复制网址成功！", ToastLength.Long).Show();
 
                 // Open link
                 var uri = Android.Net.Uri.Parse(url);
@@ -85,7 +85,7 @@ namespace FindMinPingAndroid
 
         public void PingByThread(string text)
         {
-            new Thread(() =>
+            //new Thread(() =>
             {
                 //this.RunOnUiThread(() =>
                 {
@@ -99,33 +99,37 @@ namespace FindMinPingAndroid
                     {
                         var rowCells = lines[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
                         if (rowCells[0].Contains("VPS")) break;
-                        if (!surpportedMethods.Contains(rowCells[4])) continue;
-                        IList<string> times = PingUtil.Ping(rowCells[1], 3);
-                        PingUtil.AnalyzePingResult(times, out var min, out var max, out var avg);
+                        if (!surpportedMethods.Contains(rowCells[3])) continue;
+                        //IList<string> times = PingUtil.Ping(rowCells[1], 3);
+                        //this.RunOnUiThread(() =>
+                        //{
+                        //    Toast.MakeText(this, "Ping...，" + String.Join(",", times.ToArray<string>()), ToastLength.Short).Show();
+                        //});
+                        //PingUtil.AnalyzePingResult(times, out var min, out var max, out var avg);
                         list.Add(new PingRetItem()
                         {
-                            Avg = avg,
+                            //Avg = avg,
                             IP = rowCells[1],
                             Port = rowCells[2],
                             Password = rowCells[3],
                             Method = rowCells[4],
-                            PingResult = string.Join(",", times)
+                            //PingResult = string.Join(",", times)
                         });
-                        if (list.Count >= 25) break;
+                        //if (list.Count >= 25) break;
                     }
-                    this.RunOnUiThread(() =>
+                    //this.RunOnUiThread(() =>
                     {
                         Toast.MakeText(this, "Ping测试结束，请查看avg靠前的10个结果列表", ToastLength.Long).Show();
                         EditText tv = FindViewById<EditText>(Resource.Id.editText1);
-                        tv.Text = string.Join("\n", list.OrderBy(p => p.Avg).Select(GetSSLinkForServer));
+                        tv.Text = string.Join("\n", list.Select(GetSSLinkForServer));
                         //for copy
                         var clipboard = (ClipboardManager)GetSystemService(ClipboardService);
                         var clip = ClipData.NewPlainText("SS", tv.Text);
                         clipboard.PrimaryClip = clip;
-                    });
+                    }//);
                 }; //);
 
-            }).Start();
+            }//).Start();
 
         }
 

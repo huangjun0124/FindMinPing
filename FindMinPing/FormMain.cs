@@ -17,11 +17,10 @@ namespace FindMinPing
 {
     public partial class FormMain : Form
     {
-        private string m_SiteUrl = "https://free-ss.site/";
+        private string m_SiteUrl = "";
         public FormMain()
         {
             InitializeComponent();
-            txtAddress.Text = m_SiteUrl;
             this.txtMail.Text = "ss@rohankdd.com";
             ShowControlInPanel(this.txtList);
         }
@@ -39,7 +38,7 @@ namespace FindMinPing
             this.Size = new Size(1060, 704);
             try
             {
-                Clipboard.SetText(txtAddress.Text);
+                //txt_DoubleClick(null, null);
             }
             catch (Exception) { }
         }
@@ -361,5 +360,12 @@ namespace FindMinPing
             }
         }
         #endregion
+
+        private void cmbURL_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_SiteUrl = cmbURL.Text;
+            //调用系统默认的浏览器   
+            System.Diagnostics.Process.Start(m_SiteUrl);
+        }
     }
 }
